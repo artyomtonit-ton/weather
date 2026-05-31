@@ -5,25 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Weather App Replica - Live Data</title>
     
-    <!-- PWA: Настройки для работы как приложение -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#f4f4f4" id="theme-color-meta">
     <link rel="apple-touch-icon" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' stroke='black' stroke-width='2'%3E%3Crect width='24' height='24' fill='white' stroke='none'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41'/%3E%3C/svg%3E">
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Weather%20App%22%2C%22short_name%22%3A%22Weather%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23e5e7eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bcharset%3Dutf-8%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27white%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%253E%253Crect%20width%3D%2724%27%20height%3D%2724%27%20fill%3D%27white%27%20stroke%3D%27none%27%2F%253E%253Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%274%27%2F%253E%253Cpath%20d%3D%27M12%202v2M12%2020v2M4.93%204.93l1.41%201.41M17.66%2017.66l1.41%201.41M2%2012h2M20%2012h2M6.34%2017.66l-1.41%201.41M19.07%204.93l-1.41%201.41%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 
-    <!-- Подключаем Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Подключаем React и ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
-    <!-- Подключаем Babel для JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        /* Скрываем скроллбар */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
@@ -32,13 +27,12 @@
             scrollbar-width: none;
         }
         
-        /* Убрали старую логику центрирования, которая ломала мобильные устройства */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #e5e7eb;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Запрещаем горизонтальный скролл на уровне всей страницы */
+            overflow-x: hidden;
         }
     </style>
 </head>
@@ -47,7 +41,6 @@
 
     <script type="text/babel">
         
-        // Вспомогательные функции для форматирования данных
         const formatTime = (isoString, isNow = false) => {
             if (isNow) return "Now";
             const date = new Date(isoString);
@@ -88,7 +81,6 @@
             return `${Math.round(uv)} v.high`;
         };
 
-        // Конвертация WMO кодов погоды в наши иконки
         const getWeatherIcon = (code) => {
             if (code === 0) return 'sun';
             if ([1, 2, 3, 45, 48].includes(code)) return 'cloud';
@@ -97,7 +89,6 @@
             return 'cloud';
         };
 
-        // Компонент иконок
         const Icon = ({ name, className }) => {
             if (name === 'sun') {
                 return (
@@ -141,7 +132,6 @@
             const [searchResults, setSearchResults] = React.useState([]);
             const [isSearching, setIsSearching] = React.useState(false);
 
-            // Обновляем цвет системного статус-бара телефона (PWA) при смене темы
             React.useEffect(() => {
                 const metaThemeColor = document.getElementById('theme-color-meta');
                 if (metaThemeColor) {
@@ -233,7 +223,6 @@
             const borderColor = isDark ? "border-[#333333]" : "border-[#e5e5e5]";
 
             return (
-                // Внешний wrapper отвечает за центрирование только на ПК. На мобильных он прилипает к краям.
                 <div className="min-h-screen w-full md:flex md:items-center md:justify-center">
                     
                     <div className={`relative w-full max-w-[100vw] h-[100dvh] md:h-auto md:min-h-0 md:max-w-5xl md:mx-auto md:my-10 md:rounded-[45px] md:shadow-2xl overflow-hidden transition-colors duration-500 flex flex-col ${bgContainer} ${textColor}`}>
@@ -245,10 +234,9 @@
                         )}
 
                         {!isLoading && weatherData && (
-                            // Главный контейнер контента: распределяет блоки по высоте с помощью flex
                             <div className="flex-1 flex flex-col h-full px-5 py-6 sm:px-8 sm:py-8 md:p-12 overflow-y-auto md:overflow-visible scrollbar-hide">
                                 
-                                {/* Шапка (город, дата, тема) - не сжимается */}
+                                {}
                                 <div className="flex justify-between items-start shrink-0">
                                     <div className="cursor-pointer group flex-1 pr-4" onClick={() => setIsSearchOpen(true)}>
                                         <h1 className="text-[22px] md:text-[32px] font-bold tracking-tight leading-none group-hover:opacity-70 transition-opacity flex items-center gap-1 flex-wrap break-words">
@@ -266,10 +254,10 @@
                                     </button>
                                 </div>
 
-                                {/* Основная часть (Температура + Блоки прогноза). Автоматически заполняет экран */}
+                                {}
                                 <div className="flex flex-col md:flex-row flex-1 mt-2 md:mt-12 md:gap-16">
                                     
-                                    {/* Температура. Теперь она не растягивается, а имеет аккуратные фиксированные отступы */}
+                                    {}
                                     <div className="md:w-1/3 flex items-center justify-start shrink-0 mt-4 mb-8 sm:mt-6 sm:mb-10 md:m-0">
                                         <div className="flex">
                                             <span className="text-[100px] sm:text-[130px] md:text-[180px] font-bold tracking-tighter leading-none -ml-2">{weatherData.temp}</span>
@@ -277,10 +265,10 @@
                                         </div>
                                     </div>
 
-                                    {/* Детальный прогноз. Получил flex-1, чтобы равномерно распределять пустое пространство высоких экранов */}
+                                    {}
                                     <div className="md:w-2/3 flex flex-col justify-between flex-1 gap-y-8 md:gap-y-10 pb-2">
                                         
-                                        {/* Почасовой */}
+                                        {}
                                         <div className="flex space-x-6 md:space-x-8 overflow-x-auto pb-2 scrollbar-hide w-full">
                                             {weatherData.hourly.map((h, i) => (
                                                 <div key={i} className="flex flex-col items-center space-y-2 md:space-y-3 min-w-[40px]">
@@ -291,7 +279,7 @@
                                             ))}
                                         </div>
 
-                                        {/* Детали (ветер, давление и тд) */}
+                                        {}
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-5 sm:gap-y-6 md:gap-y-10 gap-x-3 w-full md:border-t md:border-b md:border-black/5 dark:md:border-white/5 md:py-8">
                                             {weatherData.details.map((detail, i) => (
                                                 <div key={i} className="flex flex-col space-y-1 overflow-hidden">
@@ -301,7 +289,7 @@
                                             ))}
                                         </div>
 
-                                        {/* Ежедневный */}
+                                        {}
                                         <div className="flex justify-between w-full pt-2">
                                             {weatherData.daily.map((d, i) => (
                                                 <div key={i} className="flex flex-col items-center space-y-1 md:space-y-2">
@@ -315,7 +303,7 @@
                             </div>
                         )}
 
-                        {/* Оверлей поиска */}
+                        {}
                         {isSearchOpen && (
                             <div className={`absolute inset-0 z-50 flex flex-col p-6 pt-12 md:p-12 ${bgContainer} ${textColor}`}>
                                 <div className="mt-8 md:mt-0 flex items-center space-x-3 mb-6 md:mb-10">
